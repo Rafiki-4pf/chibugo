@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <style>
+        body {
+            background-image: url("images/reg.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-weight: bold;
+            font-family: 'Copperplate Gothic Light', sans-serif;
+            color: black;
+        }
+        button {
+            background: green;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        button:hover {
+            background: darkgreen;
+        }
+        input[type="text"], input[type="password"], input[type="email"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+        form {
+            max-width: 350px;
+            margin: 40px auto;
+            background: rgba(5, 5, 0, 0.5);
+            padding: 25px;
+            border-radius: 10px;
+            color: lightgreen;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background: #f0f0f0;
+        }
+        h2 {
+            margin: 0;
+        }
+    </style>
+    <script>
+        function validateMatNumber() {
+            var validNumbers = [
+                "2020030190001", "2020030190002", "2020030190003", "2020030190004", 
+                "2020030190005", "2020030190006", "2020030190007", "2020030190008", 
+                "2020030190009", "2020030190010", "2020030190011", "2020030190012", 
+                "2020030190013", "2020030190014", "2020030190015"
+            ];
+
+            var userInput = document.getElementById("matNumber").value.trim();
+            var validationMessage = document.getElementById("matNumberValidation");
+
+            if (validNumbers.includes(userInput)) {
+                validationMessage.innerHTML = "<p style='color: lightgreen;'>Valid MAT number</p>";
+                return true;
+            } else {
+                validationMessage.innerHTML = "<p style='color: red;'>Invalid MAT number</p>";
+                return false;
+            }
+        }
+
+        function validateLevel() {
+            var selectedLevel = document.getElementById("level").value;
+            var levelValidationMessage = document.getElementById("levelValidation");
+
+            if (selectedLevel === "100" || selectedLevel === "200") {
+                levelValidationMessage.innerHTML = "";
+                return true;
+            } else {
+                levelValidationMessage.innerHTML = "<p style='color: red;'>Wrong level. Please select 100 or 200 level.</p>";
+                return false;
+            }
+        }
+
+        function validatePassword() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+            var passwordValidationMessage = document.getElementById("passwordValidation");
+
+            if (password === "" || confirmPassword === "") {
+                passwordValidationMessage.innerHTML = "<p style='color: red;'>Please enter the same password.</p>";
+                return false;
+            } else if (password !== confirmPassword) {
+                passwordValidationMessage.innerHTML = "<p style='color: red;'>Passwords do not match.</p>";
+                return false;
+            } else if (!isValidPassword(password)) {
+                passwordValidationMessage.innerHTML = "<p style='color: red;'>Password must be at least 8 characters long and contain at least one number and one uppercase letter.</p>";
+                return false;
+            } else {
+                passwordValidationMessage.innerHTML = "<p style='color: lightgreen;'>Passwords match and meet complexity requirements.</p>";
+                return true;
+            }
+        }
+
+        function isValidPassword(password) {
+            var passwordRegex = /^(?=.*\d)(?=.*[A-Z]).{8,}$/;
+            return passwordRegex.test(password);
+        }
+
+        function signIn(event) {
+            event.preventDefault();
+            var isMatNumberValid = validateMatNumber();
+            var isLevelValid = validateLevel();
+            var isPasswordValid = validatePassword();
+
+            if (isMatNumberValid && isLevelValid && isPasswordValid) {
+                alert("Registration successful! Login To Your Portal.");
+                window.location.href = "Deplog.php";
+            } else {
+                alert("Registration Failed! Back To Home Page.");
+                window.location.href = "Depertment.php";
+            }
+        }
+    </script>
+</head>
+<body>
+    <center>
+        <h2>STUDENT REGISTRATION</h2>
+        <h2>Sign Up</h2>
+        <form id="signupForm" onsubmit="signIn(event)">
+            First Name:
+            <input type="text" name="firstName" required><br><br>
+            Last Name:
+            <input type="text" name="lastName" required><br><br>
+            Other Name:
+            <input type="text" name="otherName"><br><br>
+            Gender:
+            <select id="gender" name="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select> <br><br>
+            DATE OF BIRTH:
+            <input type="date" name="dateOfBirth" required> <br><br>
+            Mobile:
+            <input type="text" name="mobile" required> <br><br>
+            Level:
+            <select id="level" name="level" onchange="validateLevel()" required>
+                <option value="">Select Level</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="300">300</option>
+                <option value="400">400</option>
+                <option value="PGD">PGD</option>
+                <option value="M.SC">M.SC</option>
+                <option value="M.PHIL">M.PHIL</option>
+                <option value="PHD">PHD</option>
+            </select> <br><br>
+            Mat Number:
+            <input type="text" id="matNumber" name="matNumber" oninput="validateMatNumber()" required> <br><br>
+            Email:
+            <input type="email" name="email" required> <br><br>
+            Password:
+            <input type="password" id="password" name="password" oninput="validatePassword()" required><br><br>
+            Confirm Password:
+            <input type="password" id="confirmPassword" name="confirmPassword" oninput="validatePassword()" required><br><br>
+            <div id="levelValidation"></div>
+            <div id="matNumberValidation"></div>
+            <div id="passwordValidation"></div>
+            <button type="submit">Sign In</button><br><br>
+            <a href="Depertment.php"><button type="button">HOME</button></a>
+        </form>
+    </center>
+</body>
+</html>
